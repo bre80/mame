@@ -889,3 +889,54 @@ if (_OPTIONS["osd"] == "sdl") then
 
 	strip()
 end
+
+--------------------------------------------------
+-- blitzfs-tool
+--------------------------------------------------
+
+project("blitzfs-tool")
+uuid ("7d948868-42db-432a-9bb5-70ce5c5f4621")
+kind "ConsoleApp"
+
+flags {
+	"Symbols", -- always include minimum symbols for executables
+}
+
+if _OPTIONS["SEPARATE_BIN"]~="1" then
+	targetdir(MAME_DIR)
+end
+
+links {
+	"utils",
+	ext_lib("expat"),
+	"7z",
+	"ocore_" .. _OPTIONS["osd"],
+	ext_lib("zlib"),
+	ext_lib("flac"),
+	ext_lib("utf8proc"),
+}
+
+includedirs {
+	MAME_DIR .. "src/osd",
+	MAME_DIR .. "src/lib/util",
+	MAME_DIR .. "3rdparty",
+}
+includedirs {
+	ext_includedir("flac"),
+}
+
+files {
+	MAME_DIR .. "src/tools/blitzfs-tool/blitzfs-tool.cpp",
+	MAME_DIR .. "src/tools/blitzfs-tool/blitzcksum.cpp",
+	MAME_DIR .. "src/tools/blitzfs-tool/blitzfs.cpp",
+--	MAME_DIR .. "src/emu/emucore.cpp",
+	GEN_DIR .. "version.cpp",
+}
+
+configuration { "mingw*" or "vs*" }
+	targetextension ".exe"
+
+configuration { }
+
+strip()
+
